@@ -1,0 +1,63 @@
+-- There are two tables: airbnb_contacs and airbnb_searches. Dispaly the first 5 columns after merging the tables.
+-- Tables: airbnb_contacts, airbnb_searches
+
+/*
+
+Our goal is to join on an appropriate key and return first 5 tables. We need to probe to find the correct column for the Join - eventually it is userid/userguest columns
+
+1. Looking at these two tables, we immediately see a problem. 
+   While these two tables have shared columns ds_checkin and ds_checkout, they aren't uniquely identifiable, so we can't join 
+2. We need to better understand the tables. In this case, it's best to ask the interviewer questions to avoid incorrect assumptions. 
+
+3. Ask, what does the Airbnb searches table represent? they will say this table represents the searches of the users: 
+   ds = day of search, id_user = id of user and ds_check are dates of checkin and out, and more information
+   
+   for airbnb contacts, each row represents each contact between a guest and host
+   ID_hots, and guest id_listing are their unique id's and ds_checkin and ds_checkout
+   
+4. From this, we can begin a solution - we know that the users in the searches are the same users that are guests in airbnb contacts, so that means 
+ID user and ID guest, represent the same user
+
+5. SELECT all columns
+   
+6. FROM the tables and give aliases.
+
+7. JOIN on the seearch id user equalling id guest
+
+8. LIMIT by 25 because it's a lot of records
+
+9. So this is about the solution
+
+10. We can improve this query by asking the interview what they want to do with information. So far we have only been doing inner joins. 
+
+11. We can use outer join to retrieve rows that don't have a match
+
+12. If the interviewer is only interested where a search led to a contact. BUT if the interviewer was interested in the ratio of searches that led to a contact
+
+13. 
+
+
+
+
+*/
+
+SELECT *
+FROM datasets.airbnb_searches AS s
+JOIN datasets.airbnb_contacts AS c
+  ON s.id_user = c.id_guest
+LIMIT 25
+
+
+
+-- OUTER JOIN return all of the rows that didn't where a search didn't lead to a contact using LEFT JOIN
+-- We can make it more specific, by using ON CLAUSE, we know ds_checkin, and ds_checkout
+-- Some users will have multiple searches and contacts, and so if we only want only searches that led to a contact, then the times 
+-- they searched for should match the times they moved in 
+
+SELECT * 
+FROM  datasets.airbnb.searches AS s
+LEFT JOIN datasets.airbnb_contacts AS c
+  ON s.id_user = c.id_guest AND
+  s.ds_checkin = c.ds_checkin AND
+  s.ds_checkout = c.ds_checkout
+LIMIT 5
